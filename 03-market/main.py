@@ -119,7 +119,7 @@ def main(data_path: str) -> None:
         data = load_data(data_path, city, shop)
         if data is None:
             continue
-        
+
         print(get_q_size(data, 15*3600))
 
         histogram(data)
