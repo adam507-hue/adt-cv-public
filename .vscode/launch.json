@@ -11,6 +11,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal", //mohu přidat cestu k programu "01-intro/něco.py"
+            "args": ["output"]
         }
     ]
 }

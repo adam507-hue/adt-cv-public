@@ -26,10 +26,23 @@ def load_data(data_path: str, city: str, shop: str, day: str = "1-Mon") -> \
     # pozn. Můžeme použít default dict, nebo použít běžný slovník a při přidání nového záznamu
     # vždy zkontrolovat, zda klíč již existuje, případně inicializovat prázdný list
 
-    city_data: dict[str, list[Record]] = {}
+    city_data: dict[str, list[Record]] = defaultdict(list)
     # city_data: dict[str, list[Record]] = defaultdict(list)
-
     print("loading", city)
+
+    realPath = os.path.join(data_path, city, day, shop+".txt")
+
+    with(open(realPath, "r", encoding="utf-8") as file):
+        file.readline()
+        lines = file.readlines()
+        try:
+            for line in lines:
+                ret = line.strip().split(";")
+                time,check,id,price = ret
+                city_data[check].append(Record(int(time), int(id)))
+        except Exception as e:
+            print(f"Something went wrong!: {e}")
+
 
     return city_data
 
@@ -46,6 +59,14 @@ def get_passed_set(data: dict[str, list[Record]], key_words: list[str]) -> set[i
         set[int]: Funkce vrací množinu identifikačních čísel zákazníků.
     """
     customers: set[int] = set()
+
+    for key, value in data.items():
+        norm_key = key.split("_")[0]
+
+        if(norm_key in key_words):
+            for rec in value:
+                customers.add(rec.id_cust)
+
     return customers
 
 def filter_data_time(data: dict[str, list[Record]], cond_time: int) -> dict[str, list[Record]]:
@@ -57,6 +78,14 @@ def filter_data_time(data: dict[str, list[Record]], cond_time: int) -> dict[str,
         dict[str, list[Record]]: vrací data omezená na záznamy s časem menším nebo rovným cond_time.
     """
     ret: dict[str, list[Record]] = defaultdict(list)
+
+    for key, recList in data.items():
+        for rec in recList:
+            if(rec.time <= cond_time):
+                ret[key].append(rec)
+        #else:
+            #break
+
     return ret
 
 def get_q_size(data: dict[str, list[Record]], seconds: int) -> int:
@@ -64,10 +93,18 @@ def get_q_size(data: dict[str, list[Record]], seconds: int) -> int:
     Velikost fronty je dána počtem zákazníků, kteří prošli některým z checkpointů
     (vege, frui, meat) a ještě neprošli pokladnou.
     """
-    return 0
+    newData = filter_data_time(data, seconds)
+
+    sumPeopleOne:int = len(get_passed_set(newData,["vege", "frui", "meat"]))
+    sumPeopleTwo:int = len(get_passed_set(newData,["final-crs"])) 
+
+    return sumPeopleOne-sumPeopleTwo
 
 def histogram(data: dict[str, list[Record]]) -> None:
-    pass
+    print("--------------------------")
+    for i in range(8,20):
+        print(f"{i}:00 --- {get_q_size(data,i * 3600)}")
+    print("--------------------------")
 
 def main(data_path: str) -> None:
     while True:
@@ -82,6 +119,8 @@ def main(data_path: str) -> None:
         data = load_data(data_path, city, shop)
         if data is None:
             continue
+        
+        print(get_q_size(data, 15*3600))
 
         histogram(data)
 
