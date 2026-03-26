@@ -6,7 +6,7 @@ def main() -> None:
     queue = deque()
 
     # 2. Přidejte prvky "A", "B", "C"
-    queue.append("A")
+    queue.append("K")
     queue.append("B")
     queue.append("C")
     print(f"Fronta po naplnění: {queue}")
