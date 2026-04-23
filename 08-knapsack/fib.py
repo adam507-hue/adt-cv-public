@@ -68,6 +68,8 @@ def main() -> None:
 
     print(f"{fib_cache(a)/fib_cache(a-1)}, {fib_ultra_list(a)/fib_ultra_list(a-1)}, {fib_ultra_num(a)/fib_ultra_num(a-1)}")
 
+def hello():
+    print("Hello")
 
 if __name__ == "__main__":
     main()
