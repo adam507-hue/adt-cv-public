@@ -16,14 +16,29 @@ class Graph:
         self.edges: dict[int, list[tuple[float, int]]] = {}
 
     def add_edge(self, src: int, dst: int, weight: float = 0) -> None:
-        # TODO 1 napište kód přidání hrany do datové struktury grafu
-        pass
+        if(src not in self.edges):
+            self.edges[src] = []
+        
+        if(dst not in self.edges):
+            self.edges[dst] = []
+
+        self.edges[src].append((weight, dst))
+        self.edges[dst].append((weight, src))
+
 
 
 def load_graph(filename: str) -> Graph:
     graph = Graph()
-
     # TODO 2 vytvořte graf podle dat ze souboru
+    with open(filename, "r", encoding="utf8") as f:
+        links = json.load(f)
+
+    src = "source"
+    weight = "weight"
+    target = "target"
+
+    for i in links["links"]:
+        graph.add_edge(i[src], i[target], i[weight])
 
     return graph
 
