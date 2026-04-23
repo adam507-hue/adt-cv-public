@@ -85,6 +85,6 @@ def main() -> None:
             print_snapshot(i, queues_to_observe)
 
     print_snapshot(i, queues_to_observe)
-
+    
 if __name__ == "__main__":
     main()

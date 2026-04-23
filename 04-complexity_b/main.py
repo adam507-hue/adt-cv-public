@@ -22,6 +22,26 @@ def load_customers(shop_path: str) -> list[str]:
     return(customers)
 
 
+    customers: list[str] = []
+
+    # Otevření souboru v režimu čtení - "r"
+    with open(shop_path, "r", encoding="utf-8") as file:
+        try:
+            _ = file.readline() # Zbavení se prvního řádku obsahující názvy sloupců v souborech
+            lines = file.readlines()
+            for line in lines:
+                line = line.strip() # Odstranění neviditelných znaků z okrajů řetězce
+                splitted = line.split(";") # Rozdělení řádku podle oddělovače -> zde středníku
+                time, ckpt, cid, price = splitted
+                
+                customers.append(cid) # Přidání ID zákazníka do seznamu
+        except Exception as e:
+            # V případě výskytu chyby v try-bloku, proběhne tento kód
+            # Zde konkrétně ošetřuji všechny možné výjimky pomocí obecné Exception
+            # Je možné specifikovat pouze na (ValueError, IndexError, ...)
+            print(f"Something went wrong: {e}")
+
+    return customers
 
 def check_ckpt_list(customers: list[str]) -> list[str]:
     """Varianta A: vrátí seznam unikátních zákazníků v seznamu."""
@@ -75,9 +95,9 @@ def main() -> None:
         sys.exit(1)
 
     data_path = sys.argv[1]
-    if not os.path.isdir(data_path):
-        print(f"Error: '{data_path}' is not a directory")
-        sys.exit(1)
+    # if not os.path.isdir(data_path):
+    #     print(f"Error: '{data_path}' is not a directory")
+    #     sys.exit(1)
 
     # Defaultní hodnoty podobně jako v 03-26-market
     city = sys.argv[2] if len(sys.argv) > 2 else "Plzeň"

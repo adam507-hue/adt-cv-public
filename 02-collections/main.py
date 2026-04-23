@@ -13,27 +13,52 @@ raw_data = [
     ("Marie Dvořáková", "A01N003", "Angličtina"),
 ]
 
-@dataclass(frozen=True)
+
 class Student:
     name: str
     os_cislo: str
+
+    def __init__(self, name: str, os_cislo: str):
+        self.name = name
+        self.os_cislo = os_cislo
+        
+    def __eq__(self, other):
+        if not isinstance(other, Student):
+            return False
+        return self.os_cislo == other.os_cislo and self.name == other.name
+    
+    def __hash__(self):
+        return hash((self.os_cislo, self.name))
+    
+    def __repr__(self) -> str:
+        return f"Student(name='{self.name}', os_cislo='{self.os_cislo}')"
 
 def get_unique_subjects(data: list[tuple[str, str, str]]) -> set[str]:
     """
     Vrátí množinu unikátních předmětů.
     """
+<<<<<<< HEAD
     ret = set()
 
     for i in data:
         ret.add(i[2])
 
     return(ret)
+=======
+    unique_subjects = set()
+
+    for data_line in data:
+        unique_subjects.add(data_line[2])
+
+    return unique_subjects # PLACEHOLDER
+>>>>>>> 42df0d3ff75c0d0aacb42a3d533735836aa9b5c7
 
 def group_students_by_subject(data: list[tuple[str, str, str]]) -> dict[str, list[Student]]:
     """
     Vrátí slovník, kde klíčem je předmět a hodnotou seznam studentů (instancí třídy Student),
     kteří jsou na předmět zapsáni.
     """
+<<<<<<< HEAD
     ret = {}
 
     for i in data:
@@ -43,6 +68,18 @@ def group_students_by_subject(data: list[tuple[str, str, str]]) -> dict[str, lis
             ret[i[2]].append(Student(i[0], i[1]))
 
     return(ret)
+=======
+    subject_students : dict[str, list[Student]] = {}
+    for data_line in data:
+        student = Student(data_line[0], data_line[1])
+
+        if data_line[2] in subject_students:
+            subject_students[data_line[2]].append(student)
+        else:
+            subject_students[data_line[2]] = [student]
+
+    return subject_students 
+>>>>>>> 42df0d3ff75c0d0aacb42a3d533735836aa9b5c7
 
 def get_unique_students(data: list[tuple[str, str, str]]) -> set[Student]:
     """
@@ -50,6 +87,7 @@ def get_unique_students(data: list[tuple[str, str, str]]) -> set[Student]:
     Pozor: Data obsahují duplicity (jeden student může mít více předmětů).
     Cílem je získat množinu fyzických osob.
     """
+<<<<<<< HEAD
     un_people = []
     ret = set()
 
@@ -61,6 +99,15 @@ def get_unique_students(data: list[tuple[str, str, str]]) -> set[Student]:
         ret.add(i[0])
 
     return ret # PLACEHOLDER
+=======
+    unique_students = set()
+
+    for data_line in data:
+        student = Student(data_line[0], data_line[1])
+        unique_students.add(student)
+    
+    return unique_students # PLACEHOLDER
+>>>>>>> 42df0d3ff75c0d0aacb42a3d533735836aa9b5c7
 
 def main() -> None:
     print("--- ÚKOL 1: Unikátní předměty ---")
